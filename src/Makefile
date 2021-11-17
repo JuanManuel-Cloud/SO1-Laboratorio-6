@@ -10,7 +10,7 @@ main.o: main.c file_loader.h
 	gcc $(C_FLAGS) -c main.c
 	mv ./main.o $(PATH_OUT)
 
-file_loader.o: file_loader.c file_loader.h
+file_loader.o: file_loader.c file_loader.h data_struct.h
 	gcc $(C_FLAGS) -c file_loader.c
 	mv ./file_loader.o $(PATH_OUT)
 

@@ -4,35 +4,9 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include "file_loader.h"
-
-/*Creo la estructura con los datos de la tabla (lo que posee el archivo bin)*/
-struct data_struct {
-    short unsigned int version;
-    short unsigned int drxVersion;
-    char reservado_uno[4];
-    double initCW;
-    float azimuth;
-    float elevation;
-    short unsigned int idVolumen;
-    short unsigned int idBarrido;
-    short unsigned int idConjunto;
-    short unsigned int idGrupo;
-    short unsigned int idPulso;
-    bool iniBarrido;
-    bool finBarrido;
-    bool finGrupo;
-    bool inhibido;
-    short unsigned int validSamples;
-    short unsigned int nroAdquisicion;
-    char reservado_dos[2];
-    unsigned int nroSecuencia;
-    long unsigned int readTime_high;
-    long unsigned int readTime_low;
-    char reservado_tres[64];
-};
+#include "data_struct.h"
 
 int loadFileInMemomory(const char *file_name) {
     unsigned int len_of_file;
@@ -68,7 +42,7 @@ int loadFileInMemomory(const char *file_name) {
     num_of_instance = len_of_file / len_of_struct;
 
     /*Imprimo los tamaños*/
-    printf("\tLen of file: %d\n\n\tLen of struct: %d\n\n\tNum of instances: %d\n\n", len_of_file, len_of_struct, num_of_instance);
+    printf("\tLen of file: %d bytes\n\n\tLen of struct: %d bytes\n\n\tNum of instances: %d\n\n", len_of_file, len_of_struct, num_of_instance);
 
     /*Hago el mapeo en RAM*/
     data = (struct data_struct*) mmap(NULL,len_of_file,PROT_READ,MAP_FILE|MAP_PRIVATE,fd,0);
