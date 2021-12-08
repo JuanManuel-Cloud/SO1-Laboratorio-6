@@ -8,28 +8,33 @@
 #include "file_loader.h"
 #include "data_struct.h"
 
-int loadFileInMemomory(const char *file_name) {
+int loadFileInMemomory(const char *file_name)
+{
     unsigned int len_of_file;
     unsigned int len_of_struct;
     unsigned int num_of_instance;
     unsigned int prom;
+    /*Estructura para el buffer de stats*/
     struct stat buf;
-
+    /*Estructura con los datos*/
     struct data_struct *data;
-    /*Abro el archivo*/
+    /*Abro el archivo con permisos de lectura, */
     int fd = open(file_name, O_RDWR, S_IRUSR | S_IWUSR);
 
     /*Chequeo que se haya abierto bien el archivo*/
-    if (fd < 0) {
+    if (fd < 0)
+    {
         perror("ERROR: ocurrió un problema al abrir el archivo");
         return EXIT_FAILURE;
     }
 
     /**
      * fstat es una función de la glib nos va a dar información sobre el archivo
-     * para más info ver la struct stat, o recurrir al man
+     * para más info ver la struct stat, o recurrir al man.
+     * Guardo los stats en el buffer
      */
-    if (fstat(fd,&buf) < 0) {
+    if (fstat(fd, &buf) < 0)
+    {
         perror("ERROR: Ocurrió un problema al determinar el tamaño del archivo");
         return EXIT_FAILURE;
     }
@@ -45,8 +50,9 @@ int loadFileInMemomory(const char *file_name) {
     printf("\tLen of file: %d bytes\n\n\tLen of struct: %d bytes\n\n\tNum of instances: %d\n\n", len_of_file, len_of_struct, num_of_instance);
 
     /*Hago el mapeo en RAM*/
-    data = (struct data_struct*) mmap(NULL,len_of_file,PROT_READ,MAP_FILE|MAP_PRIVATE,fd,0);
-    if (data == MAP_FAILED) {
+    data = (struct data_struct *)mmap(NULL, len_of_file, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
+    if (data == MAP_FAILED)
+    {
         perror("ERROR: Ocurrió un error al realizar el mapeo en RAM");
         close(fd);
         return EXIT_FAILURE;
@@ -59,8 +65,8 @@ int loadFileInMemomory(const char *file_name) {
     printf("\tValid samples Nº1: %d\n\n\tValid samples Nº2: %d\n\n\tValid samples Nº3: %d\n\n\tAverage: %d", data[0].validSamples, data[1].validSamples, data[2].validSamples, prom);
 
     /*Hago el unmap de la memoria en RAM*/
-    munmap (data, len_of_file);
+    munmap(data, len_of_file);
     close(fd);
-    
+
     return EXIT_SUCCESS;
 }
