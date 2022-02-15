@@ -58,11 +58,14 @@ int loadFileInMemomory(const char *file_name)
         return EXIT_FAILURE;
     }
 
-    /*Calculo el promedio*/
-    prom = (data[0].validSamples + data[1].validSamples + data[2].validSamples) / num_of_instance;
-
+    /*Calculo el promedio*/    
+    int validSamplesAcummulated = 0; 
+    for (int i = 0; i < sizeof(data); i++) validSamplesAcummulated += data[i].validSamples;
+    prom = validSamplesAcummulated / num_of_instance;
+    
     /*Imprimo los resultados*/
-    printf("\tValid samples Nº1: %d\n\n\tValid samples Nº2: %d\n\n\tValid samples Nº3: %d\n\n\tAverage: %d", data[0].validSamples, data[1].validSamples, data[2].validSamples, prom);
+    for (int i = 0; i < sizeof(data); i++) if (data[i].validSamples != 0 ) printf("\tValid samples Nº%d: %d\n\n",i + 1, data[i].validSamples);
+    printf("\tAverage: %d", prom);
 
     /*Hago el unmap de la memoria en RAM*/
     munmap(data, len_of_file);
